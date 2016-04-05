@@ -9,12 +9,13 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../kryonet-2.18-all.jar!/" />
-        </CLASSES>
+        <CLASSES />
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://E:/kryo-3.0.3-all (2).zip!/kryo-3.0.3/src" />
+        </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="com.esotericsoftware:kryonet:2.22.0-RC1" level="project" />
   </component>
 </module>

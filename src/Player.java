@@ -5,7 +5,8 @@ import com.esotericsoftware.kryonet.Connection;
  */
 public class Player {
     public Connection connection;
-    public int x;
-    public int y;
+    public float x;
+    public float y;
+    public float rotation;
     public int id;
 }

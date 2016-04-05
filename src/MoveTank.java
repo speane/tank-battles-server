@@ -3,6 +3,7 @@
  */
 public class MoveTank {
     public int id;
-    public int x;
-    public int y;
+    public float x;
+    public float y;
+    public float rotation;
 }
