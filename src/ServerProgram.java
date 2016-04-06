@@ -81,6 +81,15 @@ public class ServerProgram {
                     server.sendToAllExceptTCP(deadTank.id, deadTank);
                 }
             }
+            @Override
+            public void disconnected(Connection c) {
+                players.remove(c.getID());
+                System.out.println(players.size());
+                if (players.size() == 0) {
+                        server.stop();
+                        server.close();
+                }
+            }
         });
     }
 }
