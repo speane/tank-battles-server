@@ -1,4 +1,4 @@
-package com.speane.tankbattles.network.transfers;
+package com.speane.tankbattles.server.network.transfers;
 
 public class ShootTank {
     public int id;

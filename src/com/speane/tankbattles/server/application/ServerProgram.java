@@ -1,8 +1,11 @@
+package com.speane.tankbattles.server.application;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.speane.tankbattles.network.transfers.*;
+import com.speane.tankbattles.server.Player;
+import com.speane.tankbattles.server.network.transfers.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -59,14 +62,17 @@ public class ServerProgram {
                 else if (o instanceof LevelUp) {
                     LevelUp levelUp = (LevelUp) o;
                     levelUp.id = c.getID();
+                    players.get(c.getID()).level += levelUp.level;
+                    players.get(c.getID()).healthPoints += levelUp.healthPoints;
                     System.out.println("level up " + levelUp.id + " " + levelUp.level);
                     server.sendToAllExceptTCP(c.getID(), levelUp);
                 }
                 else if (o instanceof HitTank) {
                     System.out.println("HIT " + c.getID());
-                        HitTank hitTank = (HitTank) o;
-                        hitTank.id = c.getID();
-                        server.sendToAllExceptTCP(hitTank.id, hitTank);
+                    HitTank hitTank = (HitTank) o;
+                    hitTank.id = c.getID();
+                    players.get(c.getID()).healthPoints -= hitTank.damage;
+                    server.sendToAllExceptTCP(hitTank.id, hitTank);
 
                 }
                 else if (o instanceof CreatePlayer) {

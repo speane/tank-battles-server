@@ -1,4 +1,4 @@
-package com.speane.tankbattles.network.transfers;
+package com.speane.tankbattles.server.network.transfers;
 
 /**
  * Created by Evgeny Shilov on 19.05.2016.
@@ -6,4 +6,5 @@ package com.speane.tankbattles.network.transfers;
 public class LevelUp {
     public int id;
     public int level;
+    public int healthPoints;
 }

@@ -1,4 +1,4 @@
-package com.speane.tankbattles.network.transfers;
+package com.speane.tankbattles.server.network.transfers;
 
 /**
  * Created by Speane on 10.03.2016.
