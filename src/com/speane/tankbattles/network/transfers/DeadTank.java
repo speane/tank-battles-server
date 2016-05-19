@@ -1,3 +1,5 @@
+package com.speane.tankbattles.network.transfers;
+
 /**
  * Created by Evgeny Shilov on 05.04.2016.
  */
