@@ -17,5 +17,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="com.esotericsoftware:kryonet:2.22.0-RC1" level="project" />
+    <orderEntry type="library" name="com.google.code.gson:gson:2.6.2" level="project" />
   </component>
 </module>

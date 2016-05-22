@@ -16,6 +16,7 @@ import java.util.Map;
  */
 public class ServerProgram {
     private static Map<Integer, Player> players;
+
     public static void main(String[] args) throws IOException, InterruptedException {
         players = new HashMap<Integer, Player>();
 
@@ -117,4 +118,6 @@ public class ServerProgram {
             }
         });
     }
+
+
 }
