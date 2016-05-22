@@ -31,7 +31,13 @@ public class DatabaseConnection {
     }
 
     public ResultSet executeQuery(String query) throws SQLException {
+        System.out.println(query);
         Statement statement = connection.createStatement();
         return statement.executeQuery(query);
+    }
+
+    public void execute(String query) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute(query);
     }
 }
