@@ -6,4 +6,5 @@ package com.speane.tankbattles.server.network.http.uri;
 public class URITypes {
     public static final String AUTHORIZATION = "/authorization";
     public static final String REGISTRATION = "/registration";
+    public static final String UPDATE_USER_INFO = "/updateuserinfo";
 }

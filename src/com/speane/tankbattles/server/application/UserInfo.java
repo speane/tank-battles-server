@@ -5,4 +5,6 @@ package com.speane.tankbattles.server.application;
  */
 public class UserInfo {
     public String name;
+    public int battlesPlayed;
+    public int bestScore;
 }

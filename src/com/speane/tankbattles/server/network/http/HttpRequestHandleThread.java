@@ -60,6 +60,39 @@ public class HttpRequestHandleThread implements Runnable {
             case URITypes.REGISTRATION:
                 registerUser();
                 break;
+            case URITypes.UPDATE_USER_INFO:
+                updateUserInfo();
+                break;
+        }
+    }
+
+    private void updateUserInfo() {
+        System.out.println("UPDATE, lol");
+        UserInfo userInfo = gsonSerializer.fromJson(new String(request.getMessageBody()), UserInfo.class);
+        try {
+            userInfo = authorizationManager.updateUserInfo(userInfo);
+            if (userInfo != null) {
+                byte[] userInfoBytes = gsonSerializer.toJson(userInfo).getBytes();
+                HttpResponse response = HttpResponseFactory.create(new StatusLine("HTTP/1.1 200 OK"), userInfoBytes);
+                try {
+                    responseSender.sendResponse(response);
+                } catch (IOException e) {
+                    System.err.println("Can't send response");
+                }
+            }
+            else {
+                try {
+                    responseSender.sendErrorResponse();
+                } catch (IOException e) {
+                    System.err.println("Can't send response");
+                }
+            }
+        } catch (SQLException sqlException) {
+            try {
+                responseSender.sendErrorResponse();
+            } catch (IOException e) {
+                System.err.println("Can't send response");
+            }
         }
     }
 

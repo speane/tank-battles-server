@@ -84,6 +84,7 @@ public class ServerProgram {
                     newPlayer.rotation = createPlayer.rotation;
                     newPlayer.healthPoints = createPlayer.healthPoints;
                     newPlayer.level = createPlayer.level;
+                    newPlayer.name = createPlayer.name;
 
                     createPlayer.id = c.getID();
 
@@ -98,6 +99,7 @@ public class ServerProgram {
                         tempPlayer.rotation = player.rotation;
                         tempPlayer.healthPoints = player.healthPoints;
                         tempPlayer.level = player.level;
+                        tempPlayer.name = player.name;
 
                         c.sendTCP(tempPlayer);
                     }
@@ -111,10 +113,10 @@ public class ServerProgram {
                 deadTank.id = c.getID();
                 server.sendToAllExceptTCP(deadTank.id, deadTank);
                 System.out.println(players.size());
-                if (players.size() == 0) {
+                /*if (players.size() == 0) {
                         server.stop();
                         server.close();
-                }
+                }*/
             }
         });
     }

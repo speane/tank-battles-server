@@ -15,14 +15,22 @@ public class DatabaseConnection {
         connection = DriverManager.getConnection(url, login, password);
     }
 
+    public UserInfo updateUserInfo(UserInfo userInfo) throws SQLException {
+        String query = "UPDATE users SET bestScore = '" + userInfo.bestScore + "', battlesPlayed = '"
+                + userInfo.battlesPlayed + "' WHERE login = '" + userInfo.name + "';";
+        execute(query);
+        return userInfo;
+    }
+
     public UserInfo getUserInfo(String userName, String password) throws SQLException {
         String query = "SELECT * FROM users WHERE login = '" +
                 userName + "' AND password = '" + password + "';";
         ResultSet resultSet = executeQuery(query);
         if (resultSet.next()) {
             UserInfo userInfo = new UserInfo();
-            userInfo.name = "JENYA225";
-            System.out.println("ZPDFSDFSDF");
+            userInfo.name = resultSet.getString("login");
+            userInfo.battlesPlayed = resultSet.getInt("battlesPlayed");
+            userInfo.bestScore = resultSet.getInt("bestScore");
             return userInfo;
         }
         else {

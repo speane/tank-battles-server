@@ -9,4 +9,5 @@ public class Player {
     public float rotation;
     public int healthPoints;
     public int level;
+    public String name;
 }

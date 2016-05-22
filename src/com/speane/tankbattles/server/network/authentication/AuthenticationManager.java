@@ -20,8 +20,12 @@ public class AuthenticationManager {
     }
 
     public UserInfo register(String userName, String password, String email) throws SQLException {
-        databaseConnection.execute("INSERT INTO users (login, password, email) VALUES ('" + userName + "', '" +
-            password + "', '" + email + "');");
+        databaseConnection.execute("INSERT INTO users (login, password, email, bestScore, battlesPlayed) VALUES ('"
+                + userName + "', '" + password + "', '" + email + "', 0, 0);");
         return getUserInfo(userName, password);
+    }
+
+    public UserInfo updateUserInfo(UserInfo userInfo) throws SQLException {
+        return databaseConnection.updateUserInfo(userInfo);
     }
 }
