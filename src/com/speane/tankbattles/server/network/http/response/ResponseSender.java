@@ -25,4 +25,10 @@ public class ResponseSender {
             dataOutputStream.write(response.getMessageBody());
         }
     }
+
+    /*public void sendOkResponse(byte[]) {
+        HttpResponse response = new HttpResponse();
+        response.setStatusLine(new StatusLine("HTTP/1.1 200 OK"));
+
+    }*/
 }
