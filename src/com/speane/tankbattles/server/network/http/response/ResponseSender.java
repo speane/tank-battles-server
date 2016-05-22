@@ -26,6 +26,20 @@ public class ResponseSender {
         }
     }
 
+    public void sendErrorResponse() throws IOException {
+        sendResponse("HTTP/1.1 500 Server Error");
+    }
+
+    public void sendNotFoundResponse() throws IOException {
+        sendResponse("HTTP/1.1 404 Not Found");
+    }
+
+    public void sendResponse(String responseLine) throws IOException {
+        HttpResponse errorResponse = new HttpResponse();
+        errorResponse.setStatusLine(new StatusLine(responseLine));
+        sendResponse(errorResponse);
+    }
+
     /*public void sendOkResponse(byte[]) {
         HttpResponse response = new HttpResponse();
         response.setStatusLine(new StatusLine("HTTP/1.1 200 OK"));

@@ -18,5 +18,17 @@
     </orderEntry>
     <orderEntry type="library" name="com.esotericsoftware:kryonet:2.22.0-RC1" level="project" />
     <orderEntry type="library" name="com.google.code.gson:gson:2.6.2" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://E:/other/jdbc/mysql-connector-java-5.1.39" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://E:/other/jdbc/mysql-connector-java-5.1.39/src" />
+        </SOURCES>
+        <jarDirectory url="file://E:/other/jdbc/mysql-connector-java-5.1.39" recursive="false" />
+      </library>
+    </orderEntry>
   </component>
 </module>
