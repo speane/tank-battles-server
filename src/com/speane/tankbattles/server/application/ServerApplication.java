@@ -12,7 +12,7 @@ public class ServerApplication {
         new Thread(new HttpRequestAcceptThread()).start();
         new Thread(() -> {
             try {
-                ServerProgram.main(new String[]{});
+                PlayServer.main(new String[]{});
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }

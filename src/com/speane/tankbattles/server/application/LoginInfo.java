@@ -6,4 +6,16 @@ package com.speane.tankbattles.server.application;
 public class LoginInfo {
     public String userName;
     public String password;
+
+    public LoginInfo() {
+        String EMPTY_STRING = "";
+
+        userName = EMPTY_STRING;
+        password = EMPTY_STRING;
+    }
+
+    public LoginInfo(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
+    }
 }

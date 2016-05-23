@@ -12,7 +12,11 @@ public class AuthenticationManager {
     private DatabaseConnection databaseConnection;
 
     public AuthenticationManager() throws SQLException {
-        databaseConnection = new DatabaseConnection("localhost", "tank_battles_scheme", "speane", "123456QWERTY");
+        String HOST = "localhost";
+        String SCHEME_NAME = "tank_battles_scheme";
+        String LOGIN = "speane";
+        String PASSWORD = "123456QWERTY";
+        databaseConnection = new DatabaseConnection(HOST, SCHEME_NAME, LOGIN, PASSWORD);
     }
 
     public UserInfo getUserInfo(String userName, String password) throws SQLException {
