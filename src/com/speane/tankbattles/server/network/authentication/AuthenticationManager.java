@@ -1,6 +1,5 @@
 package com.speane.tankbattles.server.network.authentication;
 
-import com.speane.tankbattles.server.application.UserInfo;
 import com.speane.tankbattles.server.database.DatabaseConnection;
 
 import java.sql.SQLException;

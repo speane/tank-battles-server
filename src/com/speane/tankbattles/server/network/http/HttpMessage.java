@@ -10,15 +10,11 @@ public class HttpMessage {
     protected byte[] messageBody;
 
     public HttpMessage() {
-        headers = new HashMap<String, String>();
+        headers = new HashMap<>();
     }
 
     public HashMap<String, String> getHeaders() {
         return headers;
-    }
-
-    public void setHeaders(HashMap<String, String> headers) {
-        this.headers = headers;
     }
 
     public byte[] getMessageBody() {
@@ -27,6 +23,7 @@ public class HttpMessage {
 
     public void setMessageBody(byte[] messageBody) {
         this.messageBody = messageBody;
-        headers.put("Content-Length", Integer.toString(messageBody.length));
+        String CONTENT_LENGTH_HEADER_NAME = "Content-Length";
+        headers.put(CONTENT_LENGTH_HEADER_NAME, Integer.toString(messageBody.length));
     }
 }

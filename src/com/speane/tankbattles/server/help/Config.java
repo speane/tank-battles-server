@@ -5,4 +5,5 @@ package com.speane.tankbattles.server.help;
  */
 public class Config {
     public static int PLAY_PORT = 7777;
+    public static int HTTP_PORT = 8080;
 }

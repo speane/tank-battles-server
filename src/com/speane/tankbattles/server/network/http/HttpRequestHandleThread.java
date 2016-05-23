@@ -1,10 +1,10 @@
 package com.speane.tankbattles.server.network.http;
 
 import com.google.gson.Gson;
-import com.speane.tankbattles.server.application.LoginInfo;
-import com.speane.tankbattles.server.application.RegistrationInfo;
-import com.speane.tankbattles.server.application.UserInfo;
 import com.speane.tankbattles.server.network.authentication.AuthenticationManager;
+import com.speane.tankbattles.server.network.authentication.LoginInfo;
+import com.speane.tankbattles.server.network.authentication.RegistrationInfo;
+import com.speane.tankbattles.server.network.authentication.UserInfo;
 import com.speane.tankbattles.server.network.email.EmailSender;
 import com.speane.tankbattles.server.network.http.request.HttpRequest;
 import com.speane.tankbattles.server.network.http.response.HttpResponse;
@@ -18,23 +18,30 @@ import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Created by Evgeny Shilov on 22.05.2016.
  */
 public class HttpRequestHandleThread implements Runnable {
+    private final String OK_STATUS_LINE_TEXT = "HTTP/1.1 200 OK";
+
     private AuthenticationManager authorizationManager;
     private Gson gsonSerializer;
     private HttpRequest request;
     private ResponseSender responseSender;
     private EmailSender emailSender;
 
-    public HttpRequestHandleThread(Socket client, HttpRequest request) throws SQLException, IOException {
+    private ArrayList<String> onlineUsers;
+
+    public HttpRequestHandleThread(Socket client, HttpRequest request, ArrayList<String> onlineUsers)
+            throws SQLException, IOException {
         this.request = request;
         emailSender = new EmailSender();
         authorizationManager = new AuthenticationManager();
         gsonSerializer = new Gson();
         responseSender = new ResponseSender(client.getOutputStream());
+        this.onlineUsers = onlineUsers;
     }
 
     @Override
@@ -67,62 +74,47 @@ public class HttpRequestHandleThread implements Runnable {
     }
 
     private void updateUserInfo() {
-        System.out.println("UPDATE, lol");
         UserInfo userInfo = gsonSerializer.fromJson(new String(request.getMessageBody()), UserInfo.class);
         try {
             userInfo = authorizationManager.updateUserInfo(userInfo);
             if (userInfo != null) {
                 byte[] userInfoBytes = gsonSerializer.toJson(userInfo).getBytes();
-                HttpResponse response = HttpResponseFactory.create(new StatusLine("HTTP/1.1 200 OK"), userInfoBytes);
-                try {
-                    responseSender.sendResponse(response);
-                } catch (IOException e) {
-                    System.err.println("Can't send response");
-                }
+                HttpResponse response = HttpResponseFactory.create(new StatusLine(OK_STATUS_LINE_TEXT), userInfoBytes);
+                responseSender.sendResponse(response);
             }
             else {
-                try {
-                    responseSender.sendErrorResponse();
-                } catch (IOException e) {
-                    System.err.println("Can't send response");
-                }
+                responseSender.sendErrorResponse();
             }
         } catch (SQLException sqlException) {
-            try {
-                responseSender.sendErrorResponse();
-            } catch (IOException e) {
-                System.err.println("Can't send response");
-            }
+            responseSender.sendErrorResponse();
         }
     }
 
     private void authorizeUser() {
         LoginInfo loginInfo = gsonSerializer.fromJson(new String(request.getMessageBody()), LoginInfo.class);
-        UserInfo userInfo = null;
+        UserInfo userInfo;
         try {
             userInfo = authorizationManager.getUserInfo(loginInfo.userName, loginInfo.password);
             if (userInfo != null) {
-                byte[] userInfoBytes = gsonSerializer.toJson(userInfo).getBytes();
-                HttpResponse response = HttpResponseFactory.create(new StatusLine("HTTP/1.1 200 OK"), userInfoBytes);
-                try {
+                if (!onlineUsers.contains(userInfo.name)) {
+                    onlineUsers.add(userInfo.name);
+                    byte[] userInfoBytes = gsonSerializer.toJson(userInfo).getBytes();
+                    HttpResponse response = HttpResponseFactory.create(new StatusLine(OK_STATUS_LINE_TEXT),
+                            userInfoBytes);
                     responseSender.sendResponse(response);
-                } catch (IOException e) {
-                    System.err.println("Can't send response");
+                }
+                else {
+                    String USER_ALREADY_AUTHORIZED_STATUS_LINE_TEXT = "HTTP/1.1 407 Already Authorized";
+                    HttpResponse response = HttpResponseFactory.create(
+                            new StatusLine(USER_ALREADY_AUTHORIZED_STATUS_LINE_TEXT), new byte[0]);
+                    responseSender.sendResponse(response);
                 }
             }
             else {
-                try {
-                    responseSender.sendNotFoundResponse();
-                } catch (IOException e) {
-                    System.err.println("Can't send response");
-                }
+                responseSender.sendNotFoundResponse();
             }
         } catch (SQLException sqlException) {
-            try {
-                responseSender.sendErrorResponse();
-            } catch (IOException e) {
-                System.err.println("Can't send response");
-            }
+            responseSender.sendErrorResponse();
         }
 
     }
@@ -130,39 +122,34 @@ public class HttpRequestHandleThread implements Runnable {
     private void registerUser() {
         RegistrationInfo registrationInfo = gsonSerializer.fromJson(new String(request.getMessageBody()),
                 RegistrationInfo.class);
-        UserInfo userInfo = null;
+        UserInfo userInfo;
         try {
-            userInfo = authorizationManager.register(registrationInfo.login,
-                    registrationInfo.password, registrationInfo.email);
-            if (userInfo != null) {
-                byte[] userInfoBytes = gsonSerializer.toJson(userInfo).getBytes(Charset.forName("utf-8"));
-                HttpResponse httpResponse = new HttpResponse();
-                httpResponse.setStatusLine(new StatusLine("HTTP/1.1 200 OK"));
-                httpResponse.setMessageBody(userInfoBytes);
-                try {
-                    responseSender.sendResponse(httpResponse);
-                } catch (IOException e) {
-                    System.err.println("Can't send response");
-                }
-                try {
-                    emailSender.sendRegistrationConfirmation(registrationInfo);
-                } catch (MessagingException e) {
-                    System.err.println("Can't send confirmation email");
-                }
+            if (authorizationManager.getUserInfo(registrationInfo.login, registrationInfo.password) != null) {
+                String USER_EXISTS_RESPONSE_STATUS_LINE = "HTTP/1.1 405 Exists";
+                responseSender.sendResponse(USER_EXISTS_RESPONSE_STATUS_LINE);
             }
             else {
-                try {
-                    responseSender.sendNotFoundResponse();
-                } catch (IOException e) {
-                    System.err.println("Can't send response");
+                userInfo = authorizationManager.register(registrationInfo.login,
+                        registrationInfo.password, registrationInfo.email);
+                if (userInfo != null) {
+                    String DEFAULT_CHARSET = "utf-8";
+                    byte[] userInfoBytes = gsonSerializer.toJson(userInfo).getBytes(Charset.forName(DEFAULT_CHARSET));
+                    HttpResponse httpResponse = new HttpResponse();
+                    httpResponse.setStatusLine(new StatusLine(OK_STATUS_LINE_TEXT));
+                    httpResponse.setMessageBody(userInfoBytes);
+                    responseSender.sendResponse(httpResponse);
+                    try {
+                        emailSender.sendRegistrationConfirmation(registrationInfo);
+                    } catch (MessagingException e) {
+                        System.err.println(e);
+                    }
+                }
+                else {
+                    responseSender.sendErrorResponse();
                 }
             }
         } catch (SQLException sqlException) {
-            try {
-                responseSender.sendErrorResponse();
-            } catch (IOException e) {
-                System.err.println("Can't send response");
-            }
+            responseSender.sendErrorResponse();
         }
     }
 }

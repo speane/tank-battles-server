@@ -20,13 +20,17 @@ public class RequestReceiver {
         String tempLine = dataInputStream.readUTF();
         request.setRequestLine(new RequestLine(tempLine));
 
-        while (!(tempLine = dataInputStream.readUTF()).equals("")) {
-            String[] headerParts = tempLine.split(": ");
-            request.getHeaders().put(headerParts[0], headerParts[1]);
+        String EMPTY_STRING = "";
+        String HEADER_DELIMITER = ": ";
+        int HEADER_NAME_INDEX = 0;
+        int HEADER_VALUE_INDEX = 1;
+        while (!(tempLine = dataInputStream.readUTF()).equals(EMPTY_STRING)) {
+            String[] headerParts = tempLine.split(HEADER_DELIMITER);
+            request.getHeaders().put(headerParts[HEADER_NAME_INDEX], headerParts[HEADER_VALUE_INDEX]);
         }
-
-        if (request.getHeaders().containsKey("Content-Length")) {
-            byte[] data = new byte[Integer.parseInt(request.getHeaders().get("Content-Length"))];
+        String CONTENT_LENGTH_HEADER_NAME = "Content-Length";
+        if (request.getHeaders().containsKey(CONTENT_LENGTH_HEADER_NAME)) {
+            byte[] data = new byte[Integer.parseInt(request.getHeaders().get(CONTENT_LENGTH_HEADER_NAME))];
             dataInputStream.read(data);
             request.setMessageBody(data);
         }

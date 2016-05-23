@@ -25,24 +25,8 @@ public class RequestLine {
         return method;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
     public String getURI() {
         return URI;
-    }
-
-    public void setURI(String URI) {
-        this.URI = URI;
-    }
-
-    public String getHttpVersion() {
-        return httpVersion;
-    }
-
-    public void setHttpVersion(String httpVersion) {
-        this.httpVersion = httpVersion;
     }
 
     public String toString() {

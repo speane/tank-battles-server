@@ -14,35 +14,37 @@ public class ResponseSender {
         this.outputStream = outputStream;
     }
 
-    public void sendResponse(HttpResponse response) throws IOException {
-        DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-        dataOutputStream.writeUTF(response.getStatusLine().toString());
-        for (String tempHeaderKey : response.getHeaders().keySet()) {
-            dataOutputStream.writeUTF(tempHeaderKey + ": " + response.getHeaders().get(tempHeaderKey));
+    public void sendResponse(HttpResponse response) {
+        String EMPTY_STRING = "";
+        String HEADER_DELIMITER = ": ";
+        try {
+            DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+            dataOutputStream.writeUTF(response.getStatusLine().toString());
+            for (String tempHeaderKey : response.getHeaders().keySet()) {
+                dataOutputStream.writeUTF(tempHeaderKey + HEADER_DELIMITER + response.getHeaders().get(tempHeaderKey));
+            }
+            dataOutputStream.writeUTF(EMPTY_STRING);
+            if (response.getMessageBody() != null) {
+                dataOutputStream.write(response.getMessageBody());
+            }
+        } catch (IOException e) {
+            System.err.println(e);
         }
-        dataOutputStream.writeUTF("");
-        if (response.getMessageBody() != null) {
-            dataOutputStream.write(response.getMessageBody());
-        }
     }
 
-    public void sendErrorResponse() throws IOException {
-        sendResponse("HTTP/1.1 500 Server Error");
+    public void sendErrorResponse() {
+        String SERVER_ERROR_RESPONSE_STATUS_LINE = "HTTP/1.1 500 Server Error";
+        sendResponse(SERVER_ERROR_RESPONSE_STATUS_LINE);
     }
 
-    public void sendNotFoundResponse() throws IOException {
-        sendResponse("HTTP/1.1 404 Not Found");
+    public void sendNotFoundResponse() {
+        String NOT_FOUND_RESPONSE_STATUS_LINE = "HTTP/1.1 404 Not Found";
+        sendResponse(NOT_FOUND_RESPONSE_STATUS_LINE);
     }
 
-    public void sendResponse(String responseLine) throws IOException {
+    public void sendResponse(String responseLine) {
         HttpResponse errorResponse = new HttpResponse();
         errorResponse.setStatusLine(new StatusLine(responseLine));
         sendResponse(errorResponse);
     }
-
-    /*public void sendOkResponse(byte[]) {
-        HttpResponse response = new HttpResponse();
-        response.setStatusLine(new StatusLine("HTTP/1.1 200 OK"));
-
-    }*/
 }

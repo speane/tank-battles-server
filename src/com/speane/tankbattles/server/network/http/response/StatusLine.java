@@ -4,48 +4,33 @@ package com.speane.tankbattles.server.network.http.response;
  * Created by Evgeny Shilov on 14.05.2016.
  */
 public class StatusLine {
+    private String STATUS_LINE_PARTS_DELIMITER = " ";
+
     private String httpVersion;
     private String statusCode;
     private String reasonMessage;
 
     public StatusLine() {
-        httpVersion = "";
-        statusCode = "";
-        reasonMessage = "";
+        String EMPTY_STRING = "";
+
+        httpVersion = EMPTY_STRING;
+        statusCode = EMPTY_STRING;
+        reasonMessage = EMPTY_STRING;
     }
 
     public StatusLine(String statusLine) {
-        String[] parts = statusLine.split(" ");
-        httpVersion = parts[0];
-        statusCode = parts[1];
-        reasonMessage = parts[2];
-    }
+        int HTTP_VERSION_INDEX = 0;
+        int STATUS_CODE_INDEX = 1;
+        int REASON_MESSAGE_INDEX = 2;
 
-    public String getHttpVersion() {
-        return httpVersion;
-    }
-
-    public void setHttpVersion(String httpVersion) {
-        this.httpVersion = httpVersion;
-    }
-
-    public String getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(String statusCode) {
-        this.statusCode = statusCode;
-    }
-
-    public String getReasonMessage() {
-        return reasonMessage;
-    }
-
-    public void setReasonMessage(String reasonMessage) {
-        this.reasonMessage = reasonMessage;
+        String[] parts = statusLine.split(STATUS_LINE_PARTS_DELIMITER);
+        httpVersion = parts[HTTP_VERSION_INDEX];
+        statusCode = parts[STATUS_CODE_INDEX];
+        reasonMessage = parts[REASON_MESSAGE_INDEX];
     }
 
     public String toString() {
-        return httpVersion + " " + statusCode + " " + reasonMessage;
+        return httpVersion + STATUS_LINE_PARTS_DELIMITER
+                + statusCode + STATUS_LINE_PARTS_DELIMITER + reasonMessage;
     }
 }

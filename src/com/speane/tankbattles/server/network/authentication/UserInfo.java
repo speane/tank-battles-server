@@ -1,4 +1,4 @@
-package com.speane.tankbattles.server.application;
+package com.speane.tankbattles.server.network.authentication;
 
 /**
  * Created by Evgeny Shilov on 22.05.2016.

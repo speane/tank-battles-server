@@ -1,7 +1,7 @@
 package com.speane.tankbattles.server.network.email;
 
 
-import com.speane.tankbattles.server.application.RegistrationInfo;
+import com.speane.tankbattles.server.network.authentication.RegistrationInfo;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;

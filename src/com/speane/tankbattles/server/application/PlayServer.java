@@ -4,7 +4,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.speane.tankbattles.server.Player;
 import com.speane.tankbattles.server.help.Config;
 import com.speane.tankbattles.server.network.transfers.*;
 
@@ -135,14 +134,6 @@ public class PlayServer {
 
         for (Integer key : players.keySet()) {
             Player player = players.get(key);
-            /*CreatePlayer tempPlayer = new CreatePlayer();
-            tempPlayer.id = key;
-            tempPlayer.x = player.x;
-            tempPlayer.y = player.y;
-            tempPlayer.rotation = player.rotation;
-            tempPlayer.healthPoints = player.healthPoints;
-            tempPlayer.level = player.level;
-            tempPlayer.name = player.name;*/
             CreatePlayer tempPlayer = new CreatePlayer(key, player.x, player.y, player.rotation, player.level,
                     player.healthPoints, player.name);
             connection.sendTCP(tempPlayer);

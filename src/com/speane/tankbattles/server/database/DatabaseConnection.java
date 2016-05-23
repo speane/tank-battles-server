@@ -1,6 +1,6 @@
 package com.speane.tankbattles.server.database;
 
-import com.speane.tankbattles.server.application.UserInfo;
+import com.speane.tankbattles.server.network.authentication.UserInfo;
 
 import java.sql.*;
 

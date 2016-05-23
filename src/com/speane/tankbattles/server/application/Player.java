@@ -1,4 +1,4 @@
-package com.speane.tankbattles.server;
+package com.speane.tankbattles.server.application;
 
 /**
  * Created by Speane on 10.03.2016.
